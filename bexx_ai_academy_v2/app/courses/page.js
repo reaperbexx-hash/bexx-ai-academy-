@@ -1,0 +1,2 @@
+import {db} from '../../lib/db';import Link from 'next/link';
+export default async function Courses(){const ps=await db.product.findMany({where:{published:true,type:'COURSE'},orderBy:{createdAt:'desc'}});return <><h1>Courses</h1><div className="grid">{ps.map(p=><div className="card" key={p.id}><h2>{p.title}</h2><p>{p.description}</p><p className="price">GH₵{p.price}</p><Link className="btn" href={'/checkout?product='+p.id}>Enroll</Link></div>)}</div></>}

@@ -1,0 +1,2 @@
+import {getUser} from '../../lib/auth';import Link from 'next/link';
+export default async function Admin(){const u=await getUser();if(!u||u.role!=='ADMIN')return <><h1>Admin</h1><p>Admin access required.</p></>;return <><h1>Admin dashboard</h1><div className="grid"><Link className="card" href="/admin/orders"><h2>Orders</h2><p>Review and verify payment claims.</p></Link><Link className="card" href="/admin/products"><h2>Products</h2><p>Create and publish courses and resources.</p></Link></div></>}
