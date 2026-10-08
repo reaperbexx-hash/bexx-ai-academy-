@@ -1,57 +1,83 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "sqlite" url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
 
-enum Role { STUDENT ADMIN }
-enum OrderStatus { PENDING_VERIFICATION PAID REJECTED CANCELLED }
-enum ProductType { COURSE EBOOK PDF NOTE }
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING_VERIFICATION
+  PAID
+  REJECTED
+  CANCELLED
+}
+
+enum ProductType {
+  COURSE
+  EBOOK
+  PDF
+  NOTE
+}
 
 model User {
-  id String @id @default(cuid())
-  name String
-  email String @unique
-  phone String?
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  phone        String?
   passwordHash String
-  role Role @default(STUDENT)
-  createdAt DateTime @default(now())
-  orders Order[]
-  access Access[]
+  role         Role     @default(STUDENT)
+  createdAt    DateTime @default(now())
+  orders       Order[]
+  access       Access[]
 }
+
 model Product {
-  id String @id @default(cuid())
-  title String
-  slug String @unique
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
   description String
-  price Int
-  type ProductType
-  published Boolean @default(false)
-  coverUrl String?
-  fileUrl String?
-  courseData String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders Order[]
-  access Access[]
+  price       Int
+  type        ProductType
+  published   Boolean     @default(false)
+  coverUrl    String?
+  fileUrl     String?
+  courseData  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orders      Order[]
+  access      Access[]
 }
+
 model Order {
-  id String @id @default(cuid())
-  reference String @unique
+  id            String      @id @default(cuid())
+  reference     String      @unique
   transactionId String
-  amount Int
-  status OrderStatus @default(PENDING_VERIFICATION)
-  notes String?
-  userId String
-  productId String
-  createdAt DateTime @default(now())
-  verifiedAt DateTime?
-  user User @relation(fields:[userId], references:[id])
-  product Product @relation(fields:[productId], references:[id])
+  amount        Int
+  status        OrderStatus @default(PENDING_VERIFICATION)
+  notes         String?
+  userId        String
+  productId     String
+  createdAt     DateTime    @default(now())
+  verifiedAt    DateTime?
+  user          User        @relation(fields: [userId], references: [id])
+  product       Product     @relation(fields: [productId], references: [id])
 }
+
 model Access {
-  id String @id @default(cuid())
-  userId String
+  id        String   @id @default(cuid())
+  userId    String
   productId String
   grantedAt DateTime @default(now())
-  user User @relation(fields:[userId], references:[id])
-  product Product @relation(fields:[productId], references:[id])
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
   @@unique([userId, productId])
 }
+
