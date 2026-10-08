@@ -19,23 +19,6 @@ model User {
   access       Access[]
 }
 
-model Product {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String
-  price       Int
-  type        String
-  published   Boolean  @default(false)
-  coverUrl    String?
-  fileUrl     String?
-  courseData  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  orders      Order[]
-  access      Access[]
-}
-
 model Order {
   id            String    @id @default(cuid())
   reference     String    @unique
