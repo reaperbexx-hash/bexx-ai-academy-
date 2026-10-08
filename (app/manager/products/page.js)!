@@ -1,0 +1,95 @@
+'use client';
+import { useState } from 'react';
+
+export default function ManageProducts() {
+  const [title, setTitle] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [downloadUrl, setDownloadUrl] = useState('');
+  const [faqQuestion, setFaqQuestion] = useState('');
+  const [faqAnswer, setFaqAnswer] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Logic to save the product to the database will go here
+    alert(`Product "${title}" submitted!`);
+  };
+
+  return (
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif', maxWidth: '600px' }}>
+      <h1>📦 Publish New Product</h1>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div>
+          <label><strong>Product Title:</strong></label>
+          <input 
+            type="text" 
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)} 
+            required 
+            style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+          />
+        </div>
+
+        <div>
+          <label><strong>Price (GHS):</strong></label>
+          <input 
+            type="number" 
+            value={price} 
+            onChange={(e) => setPrice(e.target.value)} 
+            required 
+            style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+          />
+        </div>
+
+        <div>
+          <label><strong>Description:</strong></label>
+          <textarea 
+            value={description} 
+            onChange={(e) => setDescription(e.target.value)} 
+            rows="4" 
+            style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+          />
+        </div>
+
+        <div>
+          <label><strong>Download Link / File URL:</strong></label>
+          <input 
+            type="url" 
+            value={downloadUrl} 
+            onChange={(e) => setDownloadUrl(e.target.value)} 
+            placeholder="https://..." 
+            required 
+            style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+          />
+        </div>
+
+        <hr style={{ margin: '1rem 0' }} />
+        <h3>❓ Product FAQ (Optional)</h3>
+
+        <div>
+          <label><strong>Frequently Asked Question:</strong></label>
+          <input 
+            type="text" 
+            value={faqQuestion} 
+            onChange={(e) => setFaqQuestion(e.target.value)} 
+            style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+          />
+        </div>
+
+        <div>
+          <label><strong>Answer:</strong></label>
+          <textarea 
+            value={faqAnswer} 
+            onChange={(e) => setFaqAnswer(e.target.value)} 
+            rows="2" 
+            style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+          />
+        </div>
+
+        <button type="submit" style={{ padding: '0.75rem', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+          Publish Product 🚀
+        </button>
+      </form>
+    </div>
+  );
+}
