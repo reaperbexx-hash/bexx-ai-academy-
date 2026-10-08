@@ -1,22 +1,43 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   name         String
-  email        String   @unique
+  email        String    @unique
   phone        String?
   passwordHash String
-  role         String   @default("STUDENT")
-  createdAt    DateTime @default(now())
+  role         String    @default("STUDENT")
+  createdAt    DateTime  @default(now())
   orders       Order[]
   access       Access[]
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  title        String
+  slug         String        @unique
+  description  String?
+  price        Float
+  type         String
+  published    Boolean       @default(false)
+  coverUrl     String?
+  fileUrl      String?
+  courseData   String?
+  downloadUrl  String?
+  faqQuestion  String?
+  faqAnswer    String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  orders       Order[]
+  access       Access[]
+  transactions Transaction[]
 }
 
 model Order {
@@ -43,17 +64,6 @@ model Access {
   product   Product  @relation(fields: [productId], references: [id])
 
   @@unique([userId, productId])
-}
-model Product {
-  id          String        @id @default(uuid())
-  title       String
-  price       Float
-  description String?
-  downloadUrl String
-  faqQuestion String?
-  faqAnswer   String?
-  createdAt   DateTime      @default(now())
-  transactions Transaction[]
 }
 
 model Transaction {
