@@ -1,0 +1,79 @@
+// app/manager/page.tsx
+import { db } from "@/lib/db";
+import { revalidatePath } from "next/cache";
+
+async function createProduct(formData: FormData) {
+  "use server";
+
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const price = parseFloat(formData.get("price") as string) || 0;
+  const published = formData.get("published") === "on";
+
+  await db.product.create({
+    data: {
+      title,
+      description,
+      price,
+      published,
+    },
+  });
+
+  revalidatePath("/manager");
+  revalidatePath("/");
+}
+
+export default async function ManagerPage() {
+  const products = await db.product.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  return (
+    <main className="p-8 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Manager Dashboard ⚙️</h1>
+      
+      {/* Product Creation Form */}
+      <section className="mb-10 bg-gray-50 p-6 rounded-lg border">
+        <h2 className="text-xl font-semibold mb-4">Add New Product 📝</h2>
+        <form action={createProduct} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Title</label>
+            <input name="title" type="text" required className="w-full border p-2 rounded" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Description</label>
+            <textarea name="description" className="w-full border p-2 rounded" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Price ($)</label>
+            <input name="price" type="number" step="0.01" required className="w-full border p-2 rounded" />
+          </div>
+          <div className="flex items-center gap-2">
+            <input name="published" type="checkbox" className="h-4 w-4" />
+            <label className="text-sm font-medium">Publish immediately</label>
+          </div>
+          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Create Product 🚀
+          </button>
+        </form>
+      </section>
+
+      {/* Product List Section */}
+      <section className="mb-10">
+        <h2 className="text-xl font-semibold mb-4">Existing Products 📦</h2>
+        <ul className="space-y-2">
+          {products.map((product) => (
+            <li key={product.id} className="border p-4 rounded flex justify-between items-center">
+              <div>
+                <span className="font-medium">{product.title}</span> - ${product.price} 
+                <span className={`ml-2 px-2 py-0.5 text-xs rounded ${product.published ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>
+                  {product.published ? "Published" : "Draft"}
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
+  );
+}
