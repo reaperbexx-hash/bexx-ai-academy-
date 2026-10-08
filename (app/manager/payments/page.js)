@@ -1,0 +1,62 @@
+'use client';
+import { useState } from 'react';
+
+export default function VerifyPayments() {
+  // Sample data to show how submitted transactions will appear
+  const [payments, setPayments] = useState([
+    { id: 1, customerName: 'John Doe', transactionId: 'TXN12345678', product: 'Digital Course', status: 'Pending' }
+  ]);
+
+  const handleApprove = (id) => {
+    setPayments(payments.map(p => p.id === id ? { ...p, status: 'Approved' } : p));
+    alert('Payment approved! Download link released to customer.');
+  };
+
+  return (
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif', maxWidth: '800px' }}>
+      <h1>💳 Verify Customer Payments</h1>
+      <p>Review submitted Transaction IDs and approve purchases to unlock download links.</p>
+
+      <div style={{ marginTop: '1.5rem' }}>
+        {payments.map((payment) => (
+          <div 
+            key={payment.id} 
+            style={{ 
+              border: '1px solid #ccc', 
+              borderRadius: '8px', 
+              padding: '1rem', 
+              marginBottom: '1rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+          >
+            <div>
+              <p style={{ margin: '0 0 0.25rem 0' }}><strong>Customer:</strong> {payment.customerName}</p>
+              <p style={{ margin: '0 0 0.25rem 0' }}><strong>Product:</strong> {payment.product}</p>
+              <p style={{ margin: '0 0 0.25rem 0' }}><strong>Transaction ID:</strong> <code>{payment.transactionId}</code></p>
+              <p style={{ margin: 0 }}><strong>Status:</strong> {payment.status}</p>
+            </div>
+
+            {payment.status === 'Pending' && (
+              <button 
+                onClick={() => handleApprove(payment.id)}
+                style={{ 
+                  padding: '0.5rem 1rem', 
+                  backgroundColor: '#28a745', 
+                  color: '#fff', 
+                  border: 'none', 
+                  borderRadius: '4px', 
+                  cursor: 'pointer',
+                  fontWeight: 'bold' 
+                }}
+              >
+                Approve & Release Link ✅
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
